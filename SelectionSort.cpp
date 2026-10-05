@@ -1,29 +1,11 @@
-﻿#include "SelectionSort.h"
+﻿
+#include "SelectionSort.h"
 
 
-CSC252::SelectionSort::SelectionSort() : UnsortedArray(nullptr), SortedArray(nullptr)
+// Implement selection sort here
+void selection_sort(int* Array, int Size)
 {
     
-}
-
-CSC252::SelectionSort::~SelectionSort()
-{
-    if (UnsortedArray != nullptr)
-    {
-        delete[] UnsortedArray;
-        UnsortedArray = nullptr;
-    }
-        
-    if (SortedArray != nullptr)
-    {
-        delete[] SortedArray;
-        SortedArray = nullptr;
-    }
-    
-}
-
-void CSC252::SelectionSort::Sort(int* Array, int Size)
-{
 }
 
 
@@ -99,8 +81,7 @@ namespace
 
         try // the try case is expected to throw an exception
         {
-            CSC252::SelectionSort SortObject;
-            SortObject.Sort(Data, VectorSize);
+            selection_sort(Data, VectorSize);
         }
         catch (const std::invalid_argument&)
         {
@@ -160,8 +141,7 @@ void CSC252::SelectionSortTest::Execute(std::istream& Input, std::ostream& Outpu
     if (!Input.eof())
         throw std::runtime_error("Input contained non-integer value(s)");
 
-    SelectionSort Sorter;
-    Sorter.Sort(Values.data(), static_cast<int>(Values.size()));
+    selection_sort(Values.data(), static_cast<int>(Values.size()));
 
     // Adds a space between each value
     for (size_t Index = 0; Index < Values.size(); ++Index)

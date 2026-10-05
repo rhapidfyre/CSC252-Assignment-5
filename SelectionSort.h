@@ -3,20 +3,18 @@
 #include "TestObject.h"
 #include <iosfwd>
 
+// Headers: This defines them so other files can reach them, without specifying their implementation.
+//          Implement them in SelectionSort.cpp
+void selection_sort(int* Array, int Size);
+
+
+
+// ===========================================================================
+// Testing implementation below. Write binary search logic above these lines.
+// ===========================================================================
+
 namespace CSC252
-{
-    // A simple, undefined selection sort class object
-    class SelectionSort
-    {
-    public:
-        SelectionSort();
-        ~SelectionSort();
-        void Sort(int* Array, int Size);
-    private:
-        int* UnsortedArray;
-        int* SortedArray;
-    };
-    
+{    
     /**
      * @class SelectionSortTest
      * @brief A test class for validating the functionality of the SelectionSort class.

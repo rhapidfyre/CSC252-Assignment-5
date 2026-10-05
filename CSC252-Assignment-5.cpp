@@ -11,6 +11,7 @@
 // Color helpers
 // NOTE: AI-Generated code for color support. Not required by the assignment.
 // ========== START CLAUDE GENERATED CODE ==========
+#include "BinarySearch.h"
 #ifdef _WIN32
 #define NOMINMAX
 #define WIN32_LEAN_AND_MEAN
@@ -24,10 +25,17 @@
 // Assignment includes and usings.
 #include "SelectionSort.h"
 #include <iomanip>
-using CSC252::SelectionSort;
+using CSC252::BinarySearchTest;
 using CSC252::SelectionSortTest;
 using std::cout;
 using std::endl;
+
+// statics; Defines one string in one place.
+#define TEST_DIR "tests/"
+#define TEST_SELECTION_DIR "selection/"
+#define TEST_BINARY_DIR "binary/"
+#define TITLE_SELECTIONSORT "Selection Sort"
+#define TITLE_BINARYSEARCH "Binary Search"
 
 // =============== HELPER FUNCTIONS ==================
 namespace Helpers
@@ -72,13 +80,25 @@ namespace Helpers
 }
 // ======== END HELPERS ========
 
-namespace
+namespace Tests
 {
-    const vector<string> TestDescriptions =
+    const vector<string> SortTestDescriptions =
     {
         "Shuffle Test", "Shuffled Permutation", "Empty Array", "Single Element", "Already Sorted",
         "Reverse Sorted", "Same Value", "Mixed Duplicates", "Negatives & Extremes", "Two Elements",
-        "Null Pointer Throw", "Negative Size Throw", "Null Size Zero", "Valid Array", "Empty; Valid Pointer"
+        "Null Pointer Throw", "Negative Size Throw", "Null Size Zero", "Valid Array",
+        "Empty; Valid Pointer"
+    };
+    
+    const vector<string> SearchTestDescriptions = 
+    {
+        "Middle Value", "First Value", "Last Value", "Between Values", "Below Smallest",
+        "Above Largest", "Single Element Found", "Single Element Missing", "Duplicates Found",
+        "All Same Found", "All Same Missing", "Even Count Found", "Two Elements Second", "Empty Array",
+        "Smallest Int", "Largest Int", "Range Whole Array", "Range Excludes Match", "Range Single Index",
+        "Range Empty", "Null Array Throws", "Negative Size Throws", "Null Size Zero",
+        "Range Null Throws", "Range Negative Start", "Range Null Empty", "Second Value",
+        "Left Of Middle", "Right Of Middle", "Second To Last"
     };
     
     string FormatTestFile(const size_t TestNumber)
@@ -92,87 +112,101 @@ namespace
         return std::to_string(TestNumber);
     }
     
-    string TestDescription(const size_t TestNumber)
+    string TestDescription(const size_t TestNumber, const vector<string>& TestDescription)
     {
         std::ostringstream TestLabel;
         TestLabel << "Test " << std::setw(2) << std::setfill('0')
-                  << TestNumber << " (" << TestDescriptions[TestNumber] << ")";
+                  << TestNumber << " (" << TestDescription[TestNumber] << ")";
         return TestLabel.str();
     }
     
+    /**
+     * @brief A polymorphic method that can be used to run tests for any type of test object.
+     * Once I started making the tests for Binary Search, I realized most of the test logic was rinse and repeat.
+     * This method is a template that can be used to run tests for any type of test object.
+     * 
+     * @tparam TestType The test object type
+     * @param TestTitle The title of the test group (i.e. Selection Sort)
+     * @param TestDescriptions The descriptions of each test (i.e. "Test 01 (20 shuffled numbers)")
+     * @return The number of tests failed.
+     */
+    template <typename TestType>
+    int RunTests(const string& TestTitle, const vector<string>& TestDescriptions)
+    {
+        // TODO - Remove before submission. This AI-generated code is just to make testing easier.
+        // ===== AI GENERATED CODE - ONLY FOR DEVELOPMENT AND TESTING =====
+        Helpers::bUseColor = Helpers::enable_color();
+        const char* ColorYellow = Helpers::Yellow;
+        const char* ColorRed = Helpers::Red;
+        // ===== END AI GENERATED CODE =====
+        
+        int TestsFailed{0};
+        string TestDirectory{TEST_DIR};
+        if (TestTitle == TITLE_SELECTIONSORT)
+            TestDirectory += TEST_SELECTION_DIR;
+        else if (TestTitle == TITLE_BINARYSEARCH)
+            TestDirectory += TEST_BINARY_DIR;
+        
+        // unique_ptr: Handles garbage collection when scope is lost.
+        // source: https://en.cppreference.com/cpp/memory/unique_ptr
+        vector<std::unique_ptr<TestType>> SelectionSortTests;
+    
+        // future: The value doesn't exist now, but will after async is complete.
+        // source: https://en.cppreference.com/cpp/thread/future
+        vector<std::future<bool>> SelectionSortTestFutures;
+        
+        const int NumDescriptions = static_cast<int>(TestDescriptions.size());
+        for (int TestNumber = 0; TestNumber < NumDescriptions; TestNumber++)
+        {
+            auto SortTestObject = std::make_unique<TestType>(TestNumber); // creates an object via smart pointers
+            SortTestObject->SetInputFile(TestDirectory + FormatTestFile(TestNumber) + ".in");
+            SortTestObject->SetOutputFile(TestDirectory + FormatTestFile(TestNumber) + ".out");
+            SelectionSortTestFutures.push_back(SortTestObject->RunAsync()); // runs the test in a worker thread
+        
+            // IDE recommended "std::move"... Had to research it; Source: https://en.cppreference.com/cpp/utility/move
+            // Turns out that std::move is used to move from its original source to the new object.
+            SelectionSortTests.push_back(std::move(SortTestObject)); // keeps track of the test as it runs
+        }
+        
+        for (size_t TestNumber = 0; TestNumber < SelectionSortTests.size(); TestNumber++)
+        {
+            SelectionSortTestFutures[TestNumber].get();
+            const TestResult Result = SelectionSortTests[TestNumber]->GetResult();
+        
+            // Passed tests are silent. Only failures and errors are printed.
+            if (Result.State == TestState::Passed)
+                continue; // Move to next test
+        
+            TestsFailed++;
+            if (Result.State == TestState::Error)
+            {
+                // TODO - Switch colored response out for test pass result when testing is done.
+                //Helpers::print_console(TestDescription(TestNumber) + ": Errored. Reason: " + Result.Message);
+                Helpers::print_console(TestDescription(TestNumber, TestDescriptions) + ": " 
+                    + Helpers::colorize("Error", ColorRed) + ". Reason: " + Result.Message);
+                continue;
+            }
+
+            // TODO - Switch colored response out for test pass result when testing is done.
+            //Helpers::print_console(TestDescription(TestNumber) + ": Failed. " + Result.Message);
+            Helpers::print_console(TestDescription(TestNumber, TestDescriptions) + ": " 
+                + Helpers::colorize("Failed", ColorYellow) + ". Reason: " + Result.Message);
+        }
+        return TestsFailed;
+    }
 }
 
 int main()
 {
-    // TODO - Remove before submission. This AI-generated code is just to make testing easier.
-    // ===== AI GENERATED CODE - ONLY FOR DEVELOPMENT AND TESTING =====
-    Helpers::bUseColor = Helpers::enable_color();
-    const char* ColorLime = Helpers::Lime;
-    const char* ColorYellow = Helpers::Yellow;
-    const char* ColorRed = Helpers::Red;
-    // ===== END AI GENERATED CODE =====
+    int TestsFailed = 0;
     
+    Helpers::print_console("  ==== SELECTION SORT ====");
+    TestsFailed += Tests::RunTests<SelectionSortTest>(TITLE_SELECTIONSORT, Tests::SortTestDescriptions);
     
-    // =================== START SELECTION SORT TESTS ==================================
-    Helpers::print_console("Beginning Selection Sort Tests...");
-    
-    // unique_ptr: Handles garbage collection when scope is lost.
-    // source: https://en.cppreference.com/cpp/memory/unique_ptr
-    vector<std::unique_ptr<SelectionSortTest>> SelectionSortTests;
-    
-    // future: The value doesn't exist now, but will after async is complete.
-    // source: https://en.cppreference.com/cpp/thread/future
-    vector<std::future<bool>> SelectionSortTestFutures;
-    
-    const int NumDescriptions = static_cast<int>(TestDescriptions.size());
-    for (int TestNumber = 0; TestNumber < NumDescriptions; TestNumber++)
-    {
-        auto SortTestObject = std::make_unique<SelectionSortTest>(TestNumber); // creates an object via smart pointers
-        SortTestObject->SetInputFile("tests/" + FormatTestFile(TestNumber) + ".in");
-        SortTestObject->SetOutputFile("tests/" + FormatTestFile(TestNumber) + ".out");
-        SelectionSortTestFutures.push_back(SortTestObject->RunAsync()); // runs the test in a worker thread
-        
-        // IDE recommended "std::move"... Had to research it; Source: https://en.cppreference.com/cpp/utility/move
-        // Turns out that std::move is used to move from its original source to the new object.
-        SelectionSortTests.push_back(std::move(SortTestObject)); // keeps track of the test as it runs
-    }
-    
-    size_t TestsFailed = 0;
+    Helpers::print_console("  ==== BINARY SEARCH ====");
+    Tests::RunTests<BinarySearchTest>(TITLE_BINARYSEARCH, Tests::SearchTestDescriptions);
     
     // Waits for each test to complete and then prints their result.
-    for (size_t TestNumber = 0; TestNumber < SelectionSortTests.size(); TestNumber++)
-    {
-        SelectionSortTestFutures[TestNumber].get();
-        const TestResult Result = SelectionSortTests[TestNumber]->GetResult();
-        
-        if (Result.State == TestState::Passed)
-        {
-            // TODO - Switch colored response out for test pass result when testing is done.
-            //Helpers::print_console(TestDescription(TestNumber) + ": Passed.");
-            Helpers::print_console(TestDescription(TestNumber) + ": " 
-                + Helpers::colorize("Passed", ColorLime) + ".");
-            continue; // Move to next test
-        }
-        
-        TestsFailed++;
-        if (Result.State == TestState::Error)
-        {
-            // TODO - Switch colored response out for test pass result when testing is done.
-            //Helpers::print_console(TestDescription(TestNumber) + ": Errored. Reason: " + Result.Message);
-            Helpers::print_console(TestDescription(TestNumber) + ": " 
-                + Helpers::colorize("Error", ColorRed) + ". Reason: " + Result.Message);
-            continue;
-        }
-
-        // TODO - Switch colored response out for test pass result when testing is done.
-        //Helpers::print_console(TestDescription(TestNumber) + ": Failed. " + Result.Message);
-        Helpers::print_console(TestDescription(TestNumber) + ": " 
-            + Helpers::colorize("Failed", ColorYellow) + ". Reason: " + Result.Message);
-    }
-    
-    Helpers::print_console("Selection Sort Tests Complete.");
-    // ===================== END SELECTION SORT TESTS ================================
-    
     Helpers::print_console("  All Tests Complete... " + std::to_string(TestsFailed) + " tests failed.");
     return TestsFailed == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
 }
