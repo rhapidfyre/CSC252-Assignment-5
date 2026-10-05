@@ -11,6 +11,7 @@
 // Color helpers
 // NOTE: AI-Generated code for color support. Not required by the assignment.
 // ========== START CLAUDE GENERATED CODE ==========
+#include "Analyzer.h"
 #include "BinarySearch.h"
 #ifdef _WIN32
 #define NOMINMAX
@@ -27,6 +28,8 @@
 #include <iomanip>
 using CSC252::BinarySearchTest;
 using CSC252::SelectionSortTest;
+using CSC252::StatisticsAnalyzerTest;
+using CSC252::SearchAnalyzerTest;
 using std::cout;
 using std::endl;
 
@@ -34,8 +37,12 @@ using std::endl;
 #define TEST_DIR "tests/"
 #define TEST_SELECTION_DIR "selection/"
 #define TEST_BINARY_DIR "search/"
+#define TEST_SEARCHANALYZER_DIR "searchanalyzer/"
+#define TEST_STATISTICS_DIR "statistics/"
 #define TITLE_SELECTIONSORT "Selection Sort"
 #define TITLE_BINARYSEARCH "Binary Search"
+#define TITLE_STATISTICS "Statistics Analyzer"
+#define TITLE_SEARCHANALYZER "Search Analyzer"
 
 // =============== HELPER FUNCTIONS ==================
 namespace Helpers
@@ -101,6 +108,19 @@ namespace Tests
         "Left Of Middle", "Right Of Middle", "Second To Last"
     };
     
+    const vector<string> StatisticsTestDescriptions =
+        {
+        "Odd Count Unsorted", "Even Median Exact", "Even Median Remainder", "Single Element", "Two Equal Elements",
+        "All Same", "Mode Tie First Wins", "Mode At End", "Mode At Start", "Mode Three Way Tie",
+        "Negatives And Zero", "Largest Ints", "Smallest And Largest", "Empty Array", "Null Array Throws",
+        "Null Size Zero", "All Unique Mode"
+    };
+    
+    const vector<string> AnalyzerTestDescriptions =
+    {
+        "All Found", "None Found", "Empty Array", "Count Resets", "Null Array Throws", "Null Size Zero"
+    };
+    
     string FormatTestFile(const size_t TestNumber)
     {
         if (TestNumber < 10)
@@ -146,6 +166,10 @@ namespace Tests
             TestDirectory += TEST_SELECTION_DIR;
         else if (TestTitle == TITLE_BINARYSEARCH)
             TestDirectory += TEST_BINARY_DIR;
+        else if (TestTitle == TITLE_STATISTICS)
+            TestDirectory += TEST_STATISTICS_DIR;
+        else if (TestTitle == TITLE_SEARCHANALYZER)
+            TestDirectory += TEST_SEARCHANALYZER_DIR;
         
         // unique_ptr: Handles garbage collection when scope is lost.
         // source: https://en.cppreference.com/cpp/memory/unique_ptr
@@ -206,10 +230,26 @@ int main()
     Helpers::print_console("  ==== BINARY SEARCH ====");
     TestsFailed += Tests::RunTests<BinarySearchTest>(TITLE_BINARYSEARCH, Tests::SearchTestDescriptions);
     
+    Helpers::print_console("  ==== STATS ANALYZER ====");
+    TestsFailed += Tests::RunTests<StatisticsAnalyzerTest>(TITLE_STATISTICS, Tests::StatisticsTestDescriptions);
+    
+    Helpers::print_console("  ==== SEARCH ANALYZER ====");
+    TestsFailed += Tests::RunTests<SearchAnalyzerTest>(TITLE_SEARCHANALYZER, Tests::AnalyzerTestDescriptions);
+    
     // Waits for each test to complete and then prints their result.
-    const size_t TotalTests = Tests::SortTestDescriptions.size() + Tests::SearchTestDescriptions.size();
-    Helpers::print_console("  All Tests Complete... " + std::to_string(TestsFailed) + "/"
-        + std::to_string(TotalTests) + " tests failed.");
+    const size_t TotalTests = Tests::SortTestDescriptions.size()
+                            + Tests::SearchTestDescriptions.size()
+                            + Tests::StatisticsTestDescriptions.size()
+                            + Tests::AnalyzerTestDescriptions.size();
+    
+    if (TestsFailed > 0)
+    {
+        Helpers::print_console("  All Tests Complete... " 
+                                + std::to_string(TestsFailed) + "/" 
+                                + std::to_string(TotalTests) + " tests failed.");
+    }
+    else
+        Helpers::print_console("  All Tests Complete. All " + std::to_string(TotalTests) + " tests passed.");
     
     return TestsFailed == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
 }
