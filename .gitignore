@@ -7,6 +7,7 @@
 *.o
 *.obj
 obj/*
+CSC252*/*
 
 # Precompiled Headers
 *.gch

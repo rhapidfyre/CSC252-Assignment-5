@@ -1,3 +1,7 @@
 <Solution>
-  <Project Path="CSC252-Assignment-5.csproj" />
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="CSC252-Assignment-5.vcxproj" />
 </Solution>
