@@ -1,20 +1,29 @@
-// CSC252-Assignment-5.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
+/**
+ * @file    CSC252-Assignment-5.cpp
+ * @authors Melanie Harris, ...
+ * @date    05 OCT 2026
+ * @version 0.1
+ * @brief   Implementation and main driver for the Statistical Analysis assignment.
+ * 
+ * @license MIT
+ */
 
-#include <iostream>
+#include "SelectionSort.h"
+using namespace CSC252;
+using std::cout;
+using std::endl;
+
+namespace Helpers
+{
+    static void print_console(const string& message) {cout << message << "\n";}
+}
+
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    Helpers::print_console("Beginning Selection Sort Tests...");
+    
+    Helpers::print_console("Selection Sort Tests Complete.");
+    
 }
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file

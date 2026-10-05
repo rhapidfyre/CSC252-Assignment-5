@@ -140,6 +140,33 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CSC252-Assignment-5.cpp" />
+    <ClCompile Include="SelectionSort.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SelectionSort.h" />
+    <ClInclude Include="TestObject.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="tests\00.in" />
+    <Content Include="tests\00.out" />
+    <Content Include="tests\01.in" />
+    <Content Include="tests\01.out" />
+    <Content Include="tests\02.in" />
+    <Content Include="tests\02.out" />
+    <Content Include="tests\03.in" />
+    <Content Include="tests\03.out" />
+    <Content Include="tests\04.in" />
+    <Content Include="tests\04.out" />
+    <Content Include="tests\05.in" />
+    <Content Include="tests\05.out" />
+    <Content Include="tests\06.in" />
+    <Content Include="tests\06.out" />
+    <Content Include="tests\07.in" />
+    <Content Include="tests\07.out" />
+    <Content Include="tests\08.in" />
+    <Content Include="tests\08.out" />
+    <Content Include="tests\09.in" />
+    <Content Include="tests\09.out" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
