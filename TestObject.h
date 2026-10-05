@@ -447,7 +447,7 @@ inline bool TestObject::Compare(const string& Expected, const string& Actual, Te
 
 	if (Left == Right)
 	{
-		OutResult.Message = "Output matched.";
+		OutResult.Message = "OK";
 		return true;
 	}
 

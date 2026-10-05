@@ -5,6 +5,18 @@
 
 namespace CSC252
 {
+    // A simple, undefined selection sort class object
+    class SelectionSort
+    {
+    public:
+        SelectionSort();
+        ~SelectionSort();
+        void Sort(int* Array, int Size);
+    private:
+        int* UnsortedArray;
+        int* SortedArray;
+    };
+    
     /**
      * @class SelectionSortTest
      * @brief A test class for validating the functionality of the SelectionSort class.
@@ -16,19 +28,10 @@ namespace CSC252
     {
     public:
         SelectionSortTest(const int TestNumber) : TestObject(TestNumber) {};
+        ~SelectionSortTest() override;
     protected:
         void Execute(std::istream& Input, std::ostream& Output) override;
-    };
-    
-    // A simple, undefined selection sort class object
-    class SelectionSort
-    {
-    public:
-        SelectionSort();
-        ~SelectionSort();
-        void Sort(int* Array, int Size);
-    private:
-        int* UnsortedArray;
-        int* SortedArray;
+        inline bool Compare(
+            const string& Expected, const string& Actual, TestResult& OutResult) override;
     };
 }
