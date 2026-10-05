@@ -27,6 +27,17 @@ namespace
         "Reverse Sorted", "Same Value", "Mixed Duplicates", "Negatives & Extremes", "Two Elements"
     };
     
+    string FormatTestFile(const size_t TestNumber)
+    {
+        if (TestNumber < 10)
+        {
+            std::ostringstream TestLabel;
+            TestLabel << std::setw(2) << std::setfill('0') << TestNumber;
+            return TestLabel.str();
+        }
+        return std::to_string(TestNumber);
+    }
+    
     string TestDescription(const size_t TestNumber)
     {
         std::ostringstream TestLabel;
@@ -54,8 +65,8 @@ int main()
     for (size_t TestNumber = 0; TestNumber < TestDescriptions.size(); TestNumber++)
     {
         SelectionSortTests.push_back(std::make_unique<SelectionSortTest>(static_cast<int>(TestNumber)));
-        SelectionSortTests.back()->SetInputFile(FilePath(TestNumber, ".in"));
-        SelectionSortTests.back()->SetOutputFile(FilePath(TestNumber, ".out"));
+        SelectionSortTests.back()->SetInputFile("tests/" + FormatTestFile(TestNumber) + ".in");
+        SelectionSortTests.back()->SetOutputFile("tests/" + FormatTestFile(TestNumber) + ".out");
         SelectionSortTestFutures.push_back(SelectionSortTests.back()->RunAsync());
     }
     
@@ -76,7 +87,7 @@ int main()
         TestsFailed++;
         if (Result.State == TestState::Error)
         {
-            Helpers::print_console(TestDescription(TestNumber) + ": Errored.");
+            Helpers::print_console(TestDescription(TestNumber) + ": Errored. Reason: " + Result.Message);
             continue;
         }
 

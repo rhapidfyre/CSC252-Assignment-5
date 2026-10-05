@@ -91,7 +91,7 @@ bool CSC252::SelectionSortTest::Compare(
     const string& Expected, const string& Actual, TestResult& OutResult)
 {
     bool bExpected, bActual;
-    const vector<int> NeededValues = ValidIntegers(Actual, bExpected);
+    const vector<int> NeededValues = ValidIntegers(Expected, bExpected);
     const vector<int> ActualValues = ValidIntegers(Actual, bActual);
     if (!bExpected)
         throw std::runtime_error("Input contained non-integer value(s)");
