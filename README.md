@@ -100,7 +100,7 @@ Blocked by SORT-01, AN-01, & SA-01
 | STATS-02 | Find the minimum using the sorted array | Minimum is the first value in a nonempty array |
 | STATS-03 | Find the maximum using the sorted array | Maximum is the last value in a nonempty array |
 | STATS-04 | Calculate the median for an odd number of elements | Median is the middle value |
-| STATS-05 | Calculate the median for an even number of elements | Median is the mean of the two middle values and retains any fractional portion |
+| STATS-05 | Calculate the median for an even number of elements | Median is the mean of the two middle values |
 | STATS-06 | Calculate the mode | Mode is the value that occurs most frequently |
 | STATS-07 | Handle multiple values tied for mode | First value in the sorted array with the highest frequency is selected |
 | STATS-08 | Handle a most frequent value at the end of the array | Final group of repeated values is included in the mode calculation |
@@ -109,8 +109,7 @@ Blocked by SORT-01, AN-01, & SA-01
 | STATS-11 | Doesn't Read Outside Array | Does not allow accessing indicies outside the bounds of the array |
 | STATS-12 | Prevents #DIV/0 | Does not allow division by zero |
 
-Dividing by integers may result in improper rounding.
-- `5/2` results in `2`, but the proper rounding of that answer would be `3`.
+C++ truncates integer math by default. Allow it to do so.
 
 ## Quality and submission requirements
 
