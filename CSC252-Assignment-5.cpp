@@ -204,10 +204,13 @@ int main()
     TestsFailed += Tests::RunTests<SelectionSortTest>(TITLE_SELECTIONSORT, Tests::SortTestDescriptions);
     
     Helpers::print_console("  ==== BINARY SEARCH ====");
-    Tests::RunTests<BinarySearchTest>(TITLE_BINARYSEARCH, Tests::SearchTestDescriptions);
+    TestsFailed += Tests::RunTests<BinarySearchTest>(TITLE_BINARYSEARCH, Tests::SearchTestDescriptions);
     
     // Waits for each test to complete and then prints their result.
-    Helpers::print_console("  All Tests Complete... " + std::to_string(TestsFailed) + " tests failed.");
+    const size_t TotalTests = Tests::SortTestDescriptions.size() + Tests::SearchTestDescriptions.size();
+    Helpers::print_console("  All Tests Complete... " + std::to_string(TestsFailed) + "/"
+        + std::to_string(TotalTests) + " tests failed.");
+    
     return TestsFailed == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
