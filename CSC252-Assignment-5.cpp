@@ -33,7 +33,7 @@ using std::endl;
 // statics; Defines one string in one place.
 #define TEST_DIR "tests/"
 #define TEST_SELECTION_DIR "selection/"
-#define TEST_BINARY_DIR "binary/"
+#define TEST_BINARY_DIR "search/"
 #define TITLE_SELECTIONSORT "Selection Sort"
 #define TITLE_BINARYSEARCH "Binary Search"
 
