@@ -31,7 +31,6 @@ x64/*
 
 # Executables
 *.exe
-*.out
 *.app
 
 # IDE Settings
