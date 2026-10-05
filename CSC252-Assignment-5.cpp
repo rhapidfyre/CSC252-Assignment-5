@@ -126,7 +126,7 @@ int main()
 
         // TODO - Switch colored response out for test pass result when testing is done.
         //Helpers::print_console(TestDescription(TestNumber) + ": Failed. " + Result.Message);
-        Helpers::print_console(TestDescription(TestNumber) + ": " + Helpers::colorize("Failed", ColorRed) + ". Reason: " + Result.Message);
+        Helpers::print_console(TestDescription(TestNumber) + ": " + Helpers::colorize("Failed", ColorYellow) + ". Reason: " + Result.Message);
     }
     Helpers::print_console("Selection Sort Tests Complete.");
     // ===================== END SELECTION SORT TESTS ================================
