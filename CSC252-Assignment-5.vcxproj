@@ -167,6 +167,16 @@
     <Content Include="tests\08.out" />
     <Content Include="tests\09.in" />
     <Content Include="tests\09.out" />
+    <Content Include="tests\10.in" />
+    <Content Include="tests\10.out" />
+    <Content Include="tests\11.in" />
+    <Content Include="tests\11.out" />
+    <Content Include="tests\12.in" />
+    <Content Include="tests\12.out" />
+    <Content Include="tests\13.in" />
+    <Content Include="tests\13.out" />
+    <Content Include="tests\14.in" />
+    <Content Include="tests\14.out" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
