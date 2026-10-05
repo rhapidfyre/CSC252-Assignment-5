@@ -78,7 +78,7 @@ namespace
     {
         "Shuffle Test", "Shuffled Permutation", "Empty Array", "Single Element", "Already Sorted",
         "Reverse Sorted", "Same Value", "Mixed Duplicates", "Negatives & Extremes", "Two Elements",
-        "Null Pointer Throw", "Negative Size Throw", "Null Size Zero", "Valid Array", "Empty Array"
+        "Null Pointer Throw", "Negative Size Throw", "Null Size Zero", "Valid Array", "Empty; Valid Pointer"
     };
     
     string FormatTestFile(const size_t TestNumber)
@@ -127,14 +127,14 @@ int main()
     const int NumDescriptions = static_cast<int>(TestDescriptions.size());
     for (int TestNumber = 0; TestNumber < NumDescriptions; TestNumber++)
     {
-        auto TestObject = std::make_unique<SelectionSortTest>(TestNumber); // creates an object via smart pointers
-        TestObject->SetInputFile("tests/" + FormatTestFile(TestNumber) + ".in");
-        TestObject->SetOutputFile("tests/" + FormatTestFile(TestNumber) + ".out");
-        SelectionSortTestFutures.push_back(TestObject->RunAsync()); // runs the test in a worker thread
+        auto SortTestObject = std::make_unique<SelectionSortTest>(TestNumber); // creates an object via smart pointers
+        SortTestObject->SetInputFile("tests/" + FormatTestFile(TestNumber) + ".in");
+        SortTestObject->SetOutputFile("tests/" + FormatTestFile(TestNumber) + ".out");
+        SelectionSortTestFutures.push_back(SortTestObject->RunAsync()); // runs the test in a worker thread
         
         // IDE recommended "std::move"... Had to research it; Source: https://en.cppreference.com/cpp/utility/move
         // Turns out that std::move is used to move from its original source to the new object.
-        SelectionSortTests.push_back(std::move(TestObject)); // keeps track of the test as it runs
+        SelectionSortTests.push_back(std::move(SortTestObject)); // keeps track of the test as it runs
     }
     
     size_t TestsFailed = 0;
@@ -149,7 +149,8 @@ int main()
         {
             // TODO - Switch colored response out for test pass result when testing is done.
             //Helpers::print_console(TestDescription(TestNumber) + ": Passed.");
-            Helpers::print_console(TestDescription(TestNumber) + ": " + Helpers::colorize("Passed", ColorLime) + ".");
+            Helpers::print_console(TestDescription(TestNumber) + ": " 
+                + Helpers::colorize("Passed", ColorLime) + ".");
             continue; // Move to next test
         }
         
@@ -158,18 +159,21 @@ int main()
         {
             // TODO - Switch colored response out for test pass result when testing is done.
             //Helpers::print_console(TestDescription(TestNumber) + ": Errored. Reason: " + Result.Message);
-            Helpers::print_console(TestDescription(TestNumber) + ": " + Helpers::colorize("Error", ColorRed) + ". Reason: " + Result.Message);
+            Helpers::print_console(TestDescription(TestNumber) + ": " 
+                + Helpers::colorize("Error", ColorRed) + ". Reason: " + Result.Message);
             continue;
         }
 
         // TODO - Switch colored response out for test pass result when testing is done.
         //Helpers::print_console(TestDescription(TestNumber) + ": Failed. " + Result.Message);
-        Helpers::print_console(TestDescription(TestNumber) + ": " + Helpers::colorize("Failed", ColorYellow) + ". Reason: " + Result.Message);
+        Helpers::print_console(TestDescription(TestNumber) + ": " 
+            + Helpers::colorize("Failed", ColorYellow) + ". Reason: " + Result.Message);
     }
     
     Helpers::print_console("Selection Sort Tests Complete.");
     // ===================== END SELECTION SORT TESTS ================================
     
     Helpers::print_console("  All Tests Complete... " + std::to_string(TestsFailed) + " tests failed.");
+    return TestsFailed == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 

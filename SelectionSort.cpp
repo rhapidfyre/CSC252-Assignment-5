@@ -24,7 +24,6 @@ CSC252::SelectionSort::~SelectionSort()
 
 void CSC252::SelectionSort::Sort(int* Array, int Size)
 {
-    
 }
 
 
@@ -57,7 +56,7 @@ namespace
     /**
      * @brief Processes input data to test the SelectionSort class and outputs the result.
      *
-     * This method allows us to catch test cases that expect an exception, before it is handled by the SelectionSort class.
+     * This method allows us to catch test cases that expect an exception.
      *
      * @param Input The input stream containing test data. Expected to start with 'e' or 'E'
      *        followed by the vector size and integer elements.
@@ -103,7 +102,7 @@ namespace
             CSC252::SelectionSort SortObject;
             SortObject.Sort(Data, VectorSize);
         }
-        catch (const std::invalid_argument&) // 
+        catch (const std::invalid_argument&)
         {
             Output << "invalid_argument";
             return;
@@ -112,6 +111,10 @@ namespace
         {
             Output << "exception";
             return;
+        }
+        catch (...) // unexpected exception caught
+        {
+            throw std::runtime_error("Unexpected exception caught - this is an unexpected test failure.");
         }
         Output << "OK";
         for (const int& OutValue : Values)
