@@ -222,6 +222,7 @@ namespace Tests
 
 int main()
 {
+#ifdef _DEBUG
     int TestsFailed = 0;
     
     Helpers::print_console("  ==== SELECTION SORT ====");
@@ -252,5 +253,8 @@ int main()
         Helpers::print_console("  All Tests Complete. All " + std::to_string(TotalTests) + " tests passed.");
     
     return TestsFailed == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
+#else
+    // TODO - Actual production output
+#endif
 }
 

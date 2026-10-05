@@ -17,18 +17,32 @@ protected:
     int Size{0};
 };
 
+class DuplicatesAnalyser : public Analyzer
+{
+public:
+    DuplicatesAnalyser(int* values, int size) : Analyzer(values, size) {}
+    std::string analyze() override { return string{}; }
+};
+
+class MissingAnlyser : public Analyzer
+{
+public:
+    MissingAnlyser(int* values, int size) : Analyzer(values, size) {}
+    std::string analyze() override { return string{}; }
+};
+
 class SearchAnalyzer : public Analyzer
 {
 public:
     SearchAnalyzer(int* values, int size) : Analyzer(values, size) {}
-    std::string analyze() override { return string{}; };
+    std::string analyze() override { return string{}; }
 };
 
 class StatisticsAnalyzer : public Analyzer
 {
 public:
     StatisticsAnalyzer(int* values, int size) : Analyzer(values, size) {}
-    std::string analyze() override { return string{}; };
+    std::string analyze() override { return string{}; }
 };
 
 
