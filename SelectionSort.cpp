@@ -76,6 +76,9 @@ void CSC252::SelectionSortTest::Execute(std::istream& Input, std::ostream& Outpu
     while (Input >> Value)
         Values.push_back(Value);
 
+    if (!Input.eof())
+        throw std::runtime_error("Input contained non-integer value(s)");
+
     SelectionSort Sorter;
     Sorter.Sort(Values.data(), static_cast<int>(Values.size()));
 
@@ -87,8 +90,7 @@ void CSC252::SelectionSortTest::Execute(std::istream& Input, std::ostream& Outpu
     }
 }
 
-bool CSC252::SelectionSortTest::Compare(
-    const string& Expected, const string& Actual, TestResult& OutResult)
+bool CSC252::SelectionSortTest::Compare(const string& Expected, const string& Actual, TestResult& OutResult)
 {
     bool bExpected, bActual;
     const vector<int> NeededValues = ValidIntegers(Expected, bExpected);

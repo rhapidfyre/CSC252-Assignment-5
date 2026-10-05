@@ -27,11 +27,10 @@ namespace CSC252
     class SelectionSortTest : public TestObject
     {
     public:
-        SelectionSortTest(const int TestNumber) : TestObject(TestNumber) {};
+        explicit SelectionSortTest(const int TestNumber) : TestObject(TestNumber) {}
         ~SelectionSortTest() override;
     protected:
         void Execute(std::istream& Input, std::ostream& Output) override;
-        inline bool Compare(
-            const string& Expected, const string& Actual, TestResult& OutResult) override;
+        bool Compare(const string& Expected, const string& Actual, TestResult& OutResult) override;
     };
 }

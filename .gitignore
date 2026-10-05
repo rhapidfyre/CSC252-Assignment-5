@@ -8,6 +8,7 @@
 *.obj
 obj/*
 CSC252*/*
+x64/*
 
 # Precompiled Headers
 *.gch
@@ -36,4 +37,4 @@ CSC252*/*
 # IDE Settings
 .vs/*
 .idea/*
-x64/Debug/CSC252-Assignment-5.pdb
+*.user
