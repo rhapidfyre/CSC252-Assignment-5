@@ -1,12 +1,73 @@
 #include "Analyzer.h"
+#include "SelectionSort.h"
 
 // Implement analyzer classes here
 
+namespace Helpers
+{
+    static bool DoesOperationOverflow(const int InValue, const int RunningSum)
+    {
+        return (InValue > 0 && RunningSum > INT_MAX - InValue)
+            || (InValue < 0 && RunningSum < INT_MIN - InValue);
+    }
+}
 
+std::string StatisticsAnalyzer::analyze()
+{
+    selection_sort(Values, Size); // also rejects a null array or a negative size
 
+    if (Size < 0)
+        throw std::invalid_argument("invalid_argument");
 
+    // Empty data is valid. There is nothing to read or divide by, so every statistic is reported as zero.
+    if (Size == 0)
+    {
+        return "The minimum value is 0\n"
+               "The maximum value is 0\n"
+               "The mean value is 0.000000\n"
+               "The median value is 0\n"
+               "The mode value is 0 which occurred 0 times";
+    }
+    
+    int Sum{0};
+    for (int Index = 0; Index < Size; Index++)
+    {
+        if (Helpers::DoesOperationOverflow(Index, Sum))
+            return std::to_string(INT_MAX);
+        Sum += Values[Index];
+    }
 
+    // Equal values sit next to each other in sorted data, so the mode is the longest run of one value.
+    // Index goes one past the end so that the final run is measured too.
+    int RunStart{0}, Mode{0}, ModeCount{0};
+    for (int Index = 1; Index <= Size; Index++)
+    {
+        if (Index < Size && Values[Index] == Values[RunStart])
+            continue; // still inside the current run
 
+        const int RunLength = Index - RunStart;
+        if (RunLength > ModeCount) // only a longer run replaces the mode, so the first of a tie is kept
+        {
+            Mode = Values[RunStart];
+            ModeCount = RunLength;
+        }
+        RunStart = Index;
+    }
+    
+    const int Middle = Size / 2; // Gets the index of the literal middle, hence 'Middle'
+    
+    // The two middle values are widened before adding, for the same reason as Sum. Half of that fits in an int again.
+    const int Median = Size % 2 == 0
+        ? static_cast<int>((static_cast<long long>(Values[Middle - 1]) + Values[Middle]) / 2)
+        : Values[Middle];
+    
+    return "The minimum value is " + std::to_string(Values[0]) + "\n"
+         + "The maximum value is " + std::to_string(Values[Size - 1]) + "\n"
+         + "The mean value is "    + std::to_string(static_cast<double>(Sum) / Size) + "\n"
+         + "The median value is "  + std::to_string(Median) + "\n"
+         + "The mode value is "    + std::to_string(Mode) + " which occurred " 
+                                   + std::to_string(ModeCount) + " times";
+}
 
 
 // ===========================================================================
