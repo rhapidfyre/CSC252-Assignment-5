@@ -24,10 +24,10 @@ public:
     std::string analyze() override { return string{}; }
 };
 
-class MissingAnlyser : public Analyzer
+class MissingAnalyser : public Analyzer
 {
 public:
-    MissingAnlyser(int* values, int size) : Analyzer(values, size) {}
+    MissingAnalyser(int* values, int size) : Analyzer(values, size) {}
     std::string analyze() override { return string{}; }
 };
 
