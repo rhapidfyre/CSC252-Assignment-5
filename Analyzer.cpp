@@ -1,16 +1,6 @@
 #include "Analyzer.h"
 #include "SelectionSort.h"
 
-// Implement analyzer classes here
-
-namespace Helpers
-{
-    static bool DoesOperationOverflow(const int InValue, const int RunningSum)
-    {
-        return (InValue > 0 && RunningSum > INT_MAX - InValue)
-            || (InValue < 0 && RunningSum < INT_MIN - InValue);
-    }
-}
 
 std::string StatisticsAnalyzer::analyze()
 {
@@ -29,13 +19,10 @@ std::string StatisticsAnalyzer::analyze()
                "The mode value is 0 which occurred 0 times";
     }
     
-    int Sum{0};
+    // largest possible sum of `int*` is an INT_MAX number of indices, which fits `long long`
+    long long Sum{0};
     for (int Index = 0; Index < Size; Index++)
-    {
-        if (Helpers::DoesOperationOverflow(Index, Sum))
-            return std::to_string(INT_MAX);
         Sum += Values[Index];
-    }
 
     // Equal values sit next to each other in sorted data, so the mode is the longest run of one value.
     // Index goes one past the end so that the final run is measured too.
