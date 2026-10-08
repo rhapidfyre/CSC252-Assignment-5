@@ -2,10 +2,36 @@
 #include "SelectionSort.h"
 
 
-// Implement selection sort here
+// Source: My brain, and auto-complete from Jetbrains Rider
+// ReSharper disable once CppParameterMayBeConst
 void selection_sort(int* Array, int Size)
 {
+    if (Array == nullptr)
+    {
+        if (Size > 0)
+            throw std::invalid_argument("invalid_argument");
+        return; // null array with size zero is valid input
+    }
     
+    if (Size < 0)
+        throw std::invalid_argument("invalid_argument");
+    
+    for (int i = 0; i < Size - 1; i++)
+    {
+        int MinIndex = i;
+        for (int j = i + 1; j < Size; j++)
+        {
+            if (Array[j] < Array[MinIndex])
+                MinIndex = j;
+        }
+        
+        if (MinIndex != i)
+        {
+            const int Temp = Array[i];
+            Array[i] = Array[MinIndex];
+            Array[MinIndex] = Temp;
+        }
+    }
 }
 
 

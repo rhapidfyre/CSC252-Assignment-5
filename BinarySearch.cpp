@@ -1,15 +1,34 @@
 
 #include "BinarySearch.h"
 
-// Implement binary search here
+// Source: https://www.geeksforgeeks.org/dsa/binary-search/
 bool binary_search_recursive(int* values, int key, int start, int end)
 {
-    return false;
+    if (start > end)
+        return false;
+    if (values == nullptr)
+        throw std::invalid_argument("invalid_argument");
+    if (start < 0)
+        throw std::invalid_argument("invalid_argument");
+    int Mid = start + (end - start) / 2;
+    if (values[Mid] == key)
+        return true;
+    if (values[Mid] > key)
+        return binary_search_recursive(values, key, start, Mid - 1);
+    return binary_search_recursive(values, key, Mid + 1, end);
 }
 
 bool binary_search(int* values, int key, int size)
 {
-    return false;
+    if (values == nullptr)
+    {
+        if (size > 0)
+            throw std::invalid_argument("invalid_argument");
+        return false;
+    }
+    if (size < 0)
+        throw std::invalid_argument("invalid_argument");
+    return binary_search_recursive(values, key, 0, size - 1);
 }
 
 
