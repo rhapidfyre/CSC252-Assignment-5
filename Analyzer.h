@@ -21,21 +21,21 @@ class DuplicatesAnalyser : public Analyzer
 {
 public:
     DuplicatesAnalyser(int* values, int size) : Analyzer(values, size) {}
-    std::string analyze() override { return string{}; }
+    std::string analyze() override;
 };
 
 class MissingAnalyser : public Analyzer
 {
 public:
     MissingAnalyser(int* values, int size) : Analyzer(values, size) {}
-    std::string analyze() override { return string{}; }
+    std::string analyze() override;
 };
 
 class SearchAnalyzer : public Analyzer
 {
 public:
-    SearchAnalyzer(int* values, int size) : Analyzer(values, size) {}
-    std::string analyze() override { return string{}; }
+    SearchAnalyzer(int* values, int size);
+    std::string analyze() override;
 };
 
 class StatisticsAnalyzer : public Analyzer

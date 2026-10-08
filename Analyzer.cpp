@@ -1,6 +1,93 @@
 #include "Analyzer.h"
+#include "BinarySearch.h"
 #include "SelectionSort.h"
+#include <random>
 
+
+// I couldn't find instructors or definitions in the assignment content, so this tries to match the Part4 output.
+// Outputs the number of duplicated values, counting a value's occurrence once.
+std::string DuplicatesAnalyser::analyze()
+{
+    try
+    {
+        selection_sort(Values, Size);
+    }
+    catch (...)
+    {
+        return "There were invalid arguments when trying to analyze duplicated values.";
+    }
+
+    // Equal values sit next to each other in sorted data, so a duplicated value is a run of two or more.
+    // Index goes one past the end so that the final run is measured too.
+    int StartIndex{0}, NumDuplicated{0};
+    for (int Index = 1; Index <= Size; Index++)
+    {
+        if (Index < Size && Values[Index] == Values[StartIndex])
+            continue; // still inside the current run
+
+        if (Index - StartIndex > 1)
+            NumDuplicated++;
+        StartIndex = Index;
+    }
+
+    return "There were " + std::to_string(NumDuplicated) + " duplicated values";
+}
+
+// I couldn't find instructors or definitions in the assignment content, so this tries to match the Part4 output.
+// Outputs the number of missing values.
+std::string MissingAnalyser::analyze()
+{
+    constexpr int SmallestValue{0};
+    constexpr int LargestValue{999};
+    
+    try
+    {
+        selection_sort(Values, Size);
+    }
+    catch (...)
+    {
+        return "There were invalid arguments when trying to analyze missing values.";
+    }
+
+    int NumMissing{0};
+    for (int Value = SmallestValue; Value <= LargestValue; Value++)
+    {
+        if (!binary_search(Values, Value, Size))
+            NumMissing++;
+    }
+
+    return "There were " + std::to_string(NumMissing) + " missing values";
+}
+
+SearchAnalyzer::SearchAnalyzer(int* values, int size) : Analyzer(values, size)
+{
+    // Sort upon construction
+    selection_sort(Values, Size);
+}
+
+std::string SearchAnalyzer::analyze()
+{
+    constexpr int NumSearches{100}; // constexpr = known at compile time. Impossible to misinterpret.
+
+    // Seeded from the system on every call, so each call searches for a different set of values.
+    std::random_device Seed;
+    
+    // recycled mersenne twister algo from Assignment 4
+    std::mt19937 Generator(Seed());
+    // generate 100 random integer values in the range of 0 to 999 (SA-02, 05, 06, 07, and 08)
+    std::uniform_int_distribution RandomValue(0, 999); // both ends are included
+
+    int NumFound{0};
+    for (int Search = 0; Search < NumSearches; Search++)
+    {
+        if (binary_search(Values, RandomValue(Generator), Size))
+            NumFound++;
+    }
+
+    return "There were "
+        + std::to_string(NumFound)    + " out of " 
+        + std::to_string(NumSearches) + " random values found";
+}
 
 std::string StatisticsAnalyzer::analyze()
 {
@@ -26,19 +113,19 @@ std::string StatisticsAnalyzer::analyze()
 
     // Equal values sit next to each other in sorted data, so the mode is the longest run of one value.
     // Index goes one past the end so that the final run is measured too.
-    int RunStart{0}, Mode{0}, ModeCount{0};
+    int RunningIndex{0}, Mode{0}, ModeCount{0};
     for (int Index = 1; Index <= Size; Index++)
     {
-        if (Index < Size && Values[Index] == Values[RunStart])
+        if (Index < Size && Values[Index] == Values[RunningIndex])
             continue; // still inside the current run
 
-        const int RunLength = Index - RunStart;
+        const int RunLength = Index - RunningIndex;
         if (RunLength > ModeCount) // only a longer run replaces the mode, so the first of a tie is kept
         {
-            Mode = Values[RunStart];
+            Mode = Values[RunningIndex];
             ModeCount = RunLength;
         }
-        RunStart = Index;
+        RunningIndex = Index;
     }
     
     const int Middle = Size / 2; // Gets the index of the literal middle, hence 'Middle'
@@ -55,6 +142,7 @@ std::string StatisticsAnalyzer::analyze()
          + "The mode value is "    + std::to_string(Mode) + " which occurred " 
                                    + std::to_string(ModeCount) + " times";
 }
+
 
 
 // ===========================================================================
