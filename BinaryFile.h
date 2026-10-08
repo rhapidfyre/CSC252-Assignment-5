@@ -15,10 +15,14 @@ public:
 
     // Prevents double free (as explained in Analyzer.h)
     BinaryReader(const BinaryReader&) = delete;  // copy constructor
+    BinaryReader(BinaryReader&& other) = delete; // move constructor
     BinaryReader& operator=(const BinaryReader&) = delete;  // copy assignment
-    
-    int* getValues() const;
-    int getSize() const;
+    BinaryReader& operator=(BinaryReader&& other) = delete; // move assignment
+
+    // [[nodiscard]] = Tells compiler to issue a warning if the return value is not caught.
+    //   My IDE recommended this, and I used it because it's an excellent maintainability feature.
+    [[nodiscard]] int* getValues() const;
+    [[nodiscard]] int getSize() const;
 
 private:
     void readValues(std::string filename);
