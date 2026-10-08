@@ -140,12 +140,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Analyzer.cpp" />
+    <ClCompile Include="BinaryFile.cpp" />
     <ClCompile Include="BinarySearch.cpp" />
     <ClCompile Include="CSC252-Assignment-5.cpp" />
     <ClCompile Include="SelectionSort.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Analyzer.h" />
+    <ClInclude Include="BinaryFile.h" />
     <ClInclude Include="BinarySearch.h" />
     <ClInclude Include="SelectionSort.h" />
     <ClInclude Include="TestObject.h" />

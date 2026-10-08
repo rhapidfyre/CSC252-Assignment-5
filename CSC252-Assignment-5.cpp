@@ -24,6 +24,7 @@
 // ========== END CLAUDE GENERATED CODE ==========
 
 // Assignment includes and usings.
+#include "BinaryFile.h"
 #include "SelectionSort.h"
 #include <iomanip>
 using CSC252::BinarySearchTest;
@@ -43,6 +44,7 @@ using std::endl;
 #define TITLE_BINARYSEARCH "Binary Search"
 #define TITLE_STATISTICS "Statistics Analyzer"
 #define TITLE_SEARCHANALYZER "Search Analyzer"
+#define DATA_FILE "values.dat"
 
 // =============== HELPER FUNCTIONS ==================
 namespace Helpers
@@ -206,55 +208,89 @@ namespace Tests
             {
                 // TODO - Switch colored response out for test pass result when testing is done.
                 //Helpers::print_console(TestDescription(TestNumber) + ": Errored. Reason: " + Result.Message);
-                Helpers::print_console(TestDescription(TestNumber, TestDescriptions) + ": " 
+                Helpers::print_console(TestTitle + " | " + TestDescription(TestNumber, TestDescriptions) + ": " 
                     + Helpers::colorize("Error", ColorRed) + ". Reason: " + Result.Message);
                 continue;
             }
 
             // TODO - Switch colored response out for test pass result when testing is done.
             //Helpers::print_console(TestDescription(TestNumber) + ": Failed. " + Result.Message);
-            Helpers::print_console(TestDescription(TestNumber, TestDescriptions) + ": " 
+            Helpers::print_console(TestTitle + " | " + TestDescription(TestNumber, TestDescriptions) + ": "
                 + Helpers::colorize("Failed", ColorYellow) + ". Reason: " + Result.Message);
         }
+
+        // A group that passed completely stays silent, the same as a single test that passed.
+        if (TestsFailed > 0)
+            Helpers::print_console(TestTitle + " reported " + std::to_string(TestsFailed) + " test case failures.");
+
         return TestsFailed;
     }
+}
+
+bool ExecuteTestHarness()
+{
+    // Each group prints its own failures and its own failure count, and hands back that count.
+    int TestsFailed{0};
+    TestsFailed += Tests::RunTests<SelectionSortTest>(TITLE_SELECTIONSORT, Tests::SortTestDescriptions);
+    TestsFailed += Tests::RunTests<BinarySearchTest>(TITLE_BINARYSEARCH, Tests::SearchTestDescriptions);
+    TestsFailed += Tests::RunTests<StatisticsAnalyzerTest>(TITLE_STATISTICS, Tests::StatisticsTestDescriptions);
+    TestsFailed += Tests::RunTests<SearchAnalyzerTest>(TITLE_SEARCHANALYZER, Tests::AnalyzerTestDescriptions);
+
+    const size_t TotalTests = Tests::SortTestDescriptions.size()       + Tests::SearchTestDescriptions.size()
+                            + Tests::StatisticsTestDescriptions.size() + Tests::AnalyzerTestDescriptions.size();
+    
+    if (TestsFailed > 0)
+    {
+        Helpers::print_console(
+            "  All Tests Complete... "
+            + std::to_string(TestsFailed) + "/"
+            + std::to_string(TotalTests) + " tests failed.");
+    }
+    else
+        Helpers::print_console("  All " + std::to_string(TotalTests) + " tests passed.");
+    
+    return TestsFailed == 0; // indicates success only on zero failures
+}
+
+/**
+ * @brief Writes the data file, reads it back, and prints what each analyzer reports.
+ *
+ * @return False on failure/exception. True otherwise.
+ */
+bool ExecuteAnalysis()
+{
+    // This is where the real work starts, so anything thrown below is reported here instead of ending the program.
+    try
+    {
+        createBinaryFile(DATA_FILE); // Failure to create can throw; Must be caught.
+        const BinaryReader Reader(DATA_FILE); // Construction can fail; Must be caught.
+        
+        // Held through the base class, so each analyze() call runs the version that belongs to the real object.
+        // Every analyzer clones the data, so one sorting its copy doesn't change what the next one is given.
+        vector<std::unique_ptr<Analyzer>> Analyzers;
+        Analyzers.push_back(std::make_unique<StatisticsAnalyzer>(Reader.getValues(), Reader.getSize()));
+        Analyzers.push_back(std::make_unique<DuplicatesAnalyser>(Reader.getValues(), Reader.getSize()));
+        Analyzers.push_back(std::make_unique<MissingAnalyser>(Reader.getValues(), Reader.getSize()));
+        Analyzers.push_back(std::make_unique<SearchAnalyzer>(Reader.getValues(), Reader.getSize()));
+
+        for (const std::unique_ptr<Analyzer>& AnalyzerObject : Analyzers)
+            Helpers::print_console(AnalyzerObject->analyze());
+    }
+    catch (const std::exception& Error)
+    {
+        std::cerr << "Error: " << Error.what() << "\n";
+        return false;
+    }
+    
+    return true;
 }
 
 int main()
 {
 #ifdef _DEBUG
-    int TestsFailed = 0;
-    
-    Helpers::print_console("  ==== SELECTION SORT ====");
-    TestsFailed += Tests::RunTests<SelectionSortTest>(TITLE_SELECTIONSORT, Tests::SortTestDescriptions);
-    
-    Helpers::print_console("  ==== BINARY SEARCH ====");
-    TestsFailed += Tests::RunTests<BinarySearchTest>(TITLE_BINARYSEARCH, Tests::SearchTestDescriptions);
-    
-    Helpers::print_console("  ==== STATS ANALYZER ====");
-    TestsFailed += Tests::RunTests<StatisticsAnalyzerTest>(TITLE_STATISTICS, Tests::StatisticsTestDescriptions);
-    
-    Helpers::print_console("  ==== SEARCH ANALYZER ====");
-    TestsFailed += Tests::RunTests<SearchAnalyzerTest>(TITLE_SEARCHANALYZER, Tests::AnalyzerTestDescriptions);
-    
-    // Waits for each test to complete and then prints their result.
-    const size_t TotalTests = Tests::SortTestDescriptions.size()
-                            + Tests::SearchTestDescriptions.size()
-                            + Tests::StatisticsTestDescriptions.size()
-                            + Tests::AnalyzerTestDescriptions.size();
-    
-    if (TestsFailed > 0)
-    {
-        Helpers::print_console("  All Tests Complete... " 
-                                + std::to_string(TestsFailed) + "/" 
-                                + std::to_string(TotalTests) + " tests failed.");
-    }
-    else
-        Helpers::print_console("  All Tests Complete. All " + std::to_string(TotalTests) + " tests passed.");
-    
-    return TestsFailed == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
+    return ExecuteTestHarness() ? EXIT_SUCCESS : EXIT_FAILURE;
 #else
-    // TODO - Actual production output
+    return ExecuteAnalysis() ? EXIT_SUCCESS : EXIT_FAILURE;
 #endif
 }
 
