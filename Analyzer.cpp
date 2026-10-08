@@ -4,6 +4,36 @@
 #include <random>
 
 
+Analyzer::Analyzer() : Values(nullptr), Size(0) {}
+
+// We blocked the copy constructor, so we pass `cloneValues` to Values instead.
+Analyzer::Analyzer(int* InValues, int InSize) : Values(cloneValues(InValues, InSize)), Size(InSize) {}
+
+Analyzer::~Analyzer()
+{
+    delete[] Values; // free alloc
+}
+
+// Performs a "deep copy;" That is, it creates a new, 2nd array with the same values.
+// Otherwise, we end up in a scenario where two objects point ot the same array (i.e., double free)
+int* Analyzer::cloneValues(int* values, int size)
+{
+    if (size < 0)
+        throw std::invalid_argument("invalid_argument");
+
+    if (values == nullptr || size == 0)
+        return nullptr;
+
+    auto* Copy = new int[size]; // IDE rec. Accepted; Type is explicit.
+    for (int Index = 0; Index < size; Index++)
+    {
+        Copy[Index] = values[Index];
+    }
+
+    // I prefer doing "Values = Copy" here, but the assignment specifically said it returns an `int*`
+    return Copy;
+}
+
 // I couldn't find instructors or definitions in the assignment content, so this tries to match the Part4 output.
 // Outputs the number of duplicated values, counting a value's occurrence once.
 std::string DuplicatesAnalyser::analyze()
@@ -67,22 +97,24 @@ SearchAnalyzer::SearchAnalyzer(int* values, int size) : Analyzer(values, size)
 
 std::string SearchAnalyzer::analyze()
 {
-    constexpr int NumSearches{100}; // constexpr = known at compile time. Impossible to misinterpret.
 
     // Seeded from the system on every call, so each call searches for a different set of values.
     std::random_device Seed;
     
     // recycled mersenne twister algo from Assignment 4
     std::mt19937 Generator(Seed());
+    
     // generate 100 random integer values in the range of 0 to 999 (SA-02, 05, 06, 07, and 08)
     std::uniform_int_distribution RandomValue(0, 999); // both ends are included
 
-    int NumFound{0};
-    for (int Search = 0; Search < NumSearches; Search++)
+    int NumFound{0}, Iterations{0};
+    constexpr int NumSearches{100}; // assigned at compile time
+    
+    do // do 1 search then increment
     {
         if (binary_search(Values, RandomValue(Generator), Size))
             NumFound++;
-    }
+    } while (++Iterations < NumSearches);
 
     return "There were "
         + std::to_string(NumFound)    + " out of " 

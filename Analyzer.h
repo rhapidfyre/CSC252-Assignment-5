@@ -7,14 +7,22 @@
 class Analyzer
 {
 public:
-    Analyzer(int* InValues, int InSize) : Values(InValues), Size(InSize) {}
-    virtual ~Analyzer() {}
-    int* cloneValues(int* values, int size) { return nullptr;}
-    virtual std::string analyze() = 0;
+    Analyzer();
+    explicit Analyzer(int* InValues, int InSize);
+    virtual ~Analyzer();
+
+    // `Analyzer NewAnalyzer = OldAnalyzer` would create a 2nd object pointing to the same array.
+    // So this would cause a double free when destructed. Deleting this prevents that from occurring.
+    //  Child classes don't need to implement this; This deletion is inherited.
+    Analyzer(const Analyzer&) = delete; // Prevents copy constructor, which effectively uses the below assign
+    Analyzer& operator=(const Analyzer&) = delete; // Prevents assignment operator, stopping pointer assingment
+
+    int* cloneValues(int* values, int size);
+    virtual std::string analyze() = 0; // requires implementation
 
 protected:
-    int* Values{nullptr};
-    int Size{0};
+    int* Values;
+    int Size;
 };
 
 class DuplicatesAnalyser : public Analyzer
