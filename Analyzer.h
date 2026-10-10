@@ -15,7 +15,9 @@ public:
     // So this would cause a double free when destructed. Deleting this prevents that from occurring.
     //  Child classes don't need to implement this; This deletion is inherited.
     Analyzer(const Analyzer&) = delete; // Prevents copy constructor, which effectively uses the below assign
+    Analyzer(Analyzer&& other) = delete; // move constructor
     Analyzer& operator=(const Analyzer&) = delete; // Prevents assignment operator, stopping pointer assingment
+    Analyzer& operator=(Analyzer&& other) = delete; // move assignment
 
     int* cloneValues(int* values, int size);
     virtual std::string analyze() = 0; // requires implementation
